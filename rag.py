@@ -87,9 +87,9 @@ def retrieve_relevant_chunks(
 
 # Answer function
 load_dotenv()
-client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
-)
+# client = genai.Client(
+#     api_key=os.getenv("GEMINI_API_KEY")
+# )
 
 def generate_answer(question, retrieved_chunks):
     context = "\n\n".join([chunk["text"] for chunk in retrieved_chunks])
