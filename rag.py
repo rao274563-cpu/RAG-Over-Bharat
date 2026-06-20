@@ -74,9 +74,12 @@ def retrieve_relevant_chunks(
     retrieved_chunks = []
 
     for idx in indices[0]:
-        retrieved_chunks.append(chunks[idx])
-
-    return retrieved_chunks    
+        if idx < len(chunks):
+            retrieved_chunks.append({
+                "text": chunks[idx],
+                "source": f"Chunk {idx + 1}"
+            })
+    return retrieved_chunks        
 
 # Answer function
 load_dotenv()
@@ -85,7 +88,7 @@ client = genai.Client(
 )
 
 def generate_answer(question, retrieved_chunks):
-    context = "\n\n".join(retrieved_chunks)
+    context = "\n\n".join([chunk["text"] for chunk in retrieved_chunks])
 
     prompt = f"""
 You are an AI assistant for Indian government schemes.
