@@ -1,7 +1,11 @@
 # Step 2 : Streamlit skleton creation
 import streamlit as st
 from rag import extract_text_from_pdf, chunk_text
-
+from rag import(
+    extract_text_from_pdf,
+    chunk_text,
+    create_vector_store
+)
 
 st.set_page_config(
     page_title="RAG Over Bharat",
@@ -35,9 +39,7 @@ if uploaded_file:
     chunks = chunk_text(text)
 
     st.success("PDF Processed successfully!")
-    st.subheader("First Chunk Preview")
-    st.text_area(
-        "Chunk 1",
-        chunks[0] if chunks else "No text extracted",
-        height=300
-    )
+    st.write(f"Total Chunks Created: {len(chunks)}")
+    vector_store = create_vector_store(chunks)
+
+    st.success("Vector store created successfully!")
