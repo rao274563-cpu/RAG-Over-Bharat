@@ -4,7 +4,11 @@ import faiss
 from embeddings import get_embedding
 import os
 from dotenv import load_dotenv
-from google import genai
+#from google import genai
+import google.generativeai as genai
+import streamlit as st
+
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 
 # Step 3: PDF Extraction
@@ -84,7 +88,7 @@ def retrieve_relevant_chunks(
 # Answer function
 load_dotenv()
 client = genai.Client(
-    api_key=os.getenv("AQ.Ab8RN6LAHZJetysD1qlpFsfIJFTqreIu5aROirIR2w0tgEfjwA")
+    api_key=os.getenv("GEMINI_API_KEY")
 )
 
 def generate_answer(question, retrieved_chunks):
@@ -105,9 +109,12 @@ Question:
 Answer in a simple, clear, helpful way.
 """
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt
-    )
+    # response = client.models.generate_content(
+    #     model="gemini-2.5-flash",
+    #     contents=prompt
+    # )
 
+    # return response.text
+    model = genai.GenerativeModel("gemini-2.5-flash")
+    response = model.generate_content(prompt)
     return response.text
