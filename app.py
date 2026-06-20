@@ -1,5 +1,6 @@
+# Step 2 : Streamlit skleton creation
 import streamlit as st
-from rag import extract_text_from_pdf
+from rag import extract_text_from_pdf, chunk_text
 
 
 st.set_page_config(
@@ -31,11 +32,12 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file:
     text = extract_text_from_pdf(uploaded_file)
+    chunks = chunk_text(text)
 
     st.success("PDF Processed successfully!")
-    st.subheader("Preview")
+    st.subheader("First Chunk Preview")
     st.text_area(
-        "Extracted Text",
-        text[:3000],
+        "Chunk 1",
+        chunks[0] if chunks else "No text extracted",
         height=300
     )
