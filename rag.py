@@ -2,6 +2,9 @@ from PyPDF2 import PdfReader
 import numpy as np
 import faiss
 from embeddings import get_embedding
+import os
+from dotenv import load_dotenv
+from google import genai
 
 
 # Step 3: PDF Extraction
@@ -74,3 +77,34 @@ def retrieve_relevant_chunks(
         retrieved_chunks.append(chunks[idx])
 
     return retrieved_chunks    
+
+# Answer function
+load_dotenv()
+client = genai.Client(
+    api_key=os.getenv("AQ.Ab8RN6LAHZJetysD1qlpFsfIJFTqreIu5aROirIR2w0tgEfjwA")
+)
+
+def generate_answer(question, retrieved_chunks):
+    context = "\n\n".join(retrieved_chunks)
+
+    prompt = f"""
+You are an AI assistant for Indian government schemes.
+
+Use ONLY the context below to answer the question.
+If answer is not in context, say "Not found in document".
+
+Context:
+{context}
+
+Question:
+{question}
+
+Answer in a simple, clear, helpful way.
+"""
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt
+    )
+
+    return response.text

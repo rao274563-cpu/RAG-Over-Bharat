@@ -5,7 +5,8 @@ from rag import(
     extract_text_from_pdf,
     chunk_text,
     create_vector_store,
-    retrieve_relevant_chunks
+    retrieve_relevant_chunks,
+    generate_answer
 )
 
 st.set_page_config(
@@ -56,7 +57,15 @@ if uploaded_file:
             chunks
         )
 
-        st.subheader("Retrieved Context")
-        for i, chunk in enumerate(retrieved_chunk, start=1):
-            st.write(f"Chunk{i}")   
-            st.write(chunk[:1000])
+        # st.subheader("Retrieved Context")
+        # for i, chunk in enumerate(retrieved_chunk, start=1):
+        #     st.write(f"Chunk{i}")   
+        #     st.write(chunk[:1000])
+
+        answer = generate_answer(
+            user_question,
+            retrieved_chunk
+        )
+
+        st.subheader("Answer")
+        st.write(answer)
