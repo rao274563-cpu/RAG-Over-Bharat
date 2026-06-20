@@ -50,3 +50,27 @@ def create_vector_store(chunks):
 
     index.add(embeddings)
     return index
+
+def retrieve_relevant_chunks(
+        question,
+        index,
+        chunks,
+        k=3
+):
+    question_embedding = get_embedding(question)
+    query_vector = np.array(
+        [question_embedding],
+        dtype = np.float32
+    )
+
+    distances, indices = index.search(
+        query_vector,
+        k
+    )
+
+    retrieved_chunks = []
+
+    for idx in indices[0]:
+        retrieved_chunks.append(chunks[idx])
+
+    return retrieved_chunks    

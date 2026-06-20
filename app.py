@@ -4,7 +4,8 @@ from rag import extract_text_from_pdf, chunk_text
 from rag import(
     extract_text_from_pdf,
     chunk_text,
-    create_vector_store
+    create_vector_store,
+    retrieve_relevant_chunks
 )
 
 st.set_page_config(
@@ -43,3 +44,19 @@ if uploaded_file:
     vector_store = create_vector_store(chunks)
 
     st.success("Vector store created successfully!")
+
+    user_question = st.text_input(
+        "Ask a question about the document"
+    )
+
+    if user_question:
+        retrieved_chunk = retrieve_relevant_chunks(
+            user_question,
+            vector_store,
+            chunks
+        )
+
+        st.subheader("Retrieved Context")
+        for i, chunk in enumerate(retrieved_chunk, start=1):
+            st.write(f"Chunk{i}")   
+            st.write(chunk[:1000])
